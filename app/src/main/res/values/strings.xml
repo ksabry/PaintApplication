@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PaintApplication</string>
+    <string name="button_new">New</string>
+    <string name="button_brush">Brush</string>
+    <string name="button_erase">Erase</string>
+    <string name="button_save">Save</string>
 </resources>
