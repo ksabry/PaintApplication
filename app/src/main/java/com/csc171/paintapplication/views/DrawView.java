@@ -42,12 +42,11 @@ public class DrawView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        pathPoints = new ArrayList<>();
         float touchX = event.getX(), touchY = event.getY();
-        pathPoints.add(touchX); pathPoints.add(touchY);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                pathPoints = new ArrayList<>();
                 drawPath.moveTo(touchX, touchY);
                 pathPoints.add(touchX); pathPoints.add(touchY);
                 break;
@@ -84,10 +83,12 @@ public class DrawView extends View {
 
     public void recoverFromHistory(int index) {
         int historyCacheIndex = index / historyCacheInterval;
+        drawCanvas.drawColor(Color.WHITE);
         drawCanvas.drawBitmap(historyCache.get(historyCacheIndex), 0, 0, drawPaint);
         for (int idx = historyCacheIndex * historyCacheInterval; idx < index; idx++) {
             applyOperation(history.get(idx));
         }
+        invalidate();
     }
 
     public void applyOperation(Operation operation) {
@@ -116,6 +117,13 @@ public class DrawView extends View {
         setupPaint();
     }
 
+    public void clearHistory() {
+        history.clear();
+        historyCache.clear();
+        historyCache.add(canvasBitmap.copy(canvasBitmap.getConfig(), true));
+        historyIndex = 0;
+    }
+
     public void clearCanvas() {
         if (drawCanvas != null) {
             drawCanvas.drawColor(Color.WHITE);
@@ -129,8 +137,10 @@ public class DrawView extends View {
     }
 
     public void redo() {
-        if (historyIndex != history.size() - 1)
-            applyOperation(history.get(++historyIndex));
+        if (historyIndex != history.size()) {
+            applyOperation(history.get(historyIndex++));
+            invalidate();
+        }
     }
 
     @Override
