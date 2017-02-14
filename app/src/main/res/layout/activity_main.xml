@@ -73,15 +73,8 @@
         <com.csc171.paintapplication.views.DrawView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/canvas" />
+            android:id="@+id/canvas"
+            android:background="#fff" />
     </LinearLayout>
 
-    <com.csc171.paintapplication.views.DrawView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/canvas"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#FFFFFF" />
 </RelativeLayout>
