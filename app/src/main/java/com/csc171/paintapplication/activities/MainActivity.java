@@ -1,17 +1,21 @@
 package com.csc171.paintapplication.activities;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.csc171.paintapplication.R;
 import com.csc171.paintapplication.models.Operation;
@@ -21,6 +25,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     public static final String TAG = "MainActivity";
@@ -30,10 +35,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Button button_brush;
     private Button button_erase;
     private Button button_save;
+    private Button button_undo;
+    private Button button_redo;
 
     private SensorManager sensorManager;
 
-    private static final double SHAKE_THRESHOLD = 30.0;
+    private static final double SHAKE_THRESHOLD = 25.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         button_brush = (Button) findViewById(R.id.button_brush);
         button_erase = (Button) findViewById(R.id.button_erase);
         button_save = (Button) findViewById(R.id.button_save);
+        button_undo = (Button) findViewById(R.id.button_undo);
+        button_redo = (Button) findViewById(R.id.button_redo);
 
         button_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,22 +69,50 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        button_undo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canvas.undo();
+            }
+        });
+
+        button_redo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canvas.redo();
+            }
+        });
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
     }
 
     public void saveCanvas() {
-        try {
-            File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
+        saveDialog.setTitle("Save drawing");
+        saveDialog.setMessage("Save drawing to device Gallery?");
+        saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                canvas.setDrawingCacheEnabled(true);
+                String imgSaved = MediaStore.Images.Media.insertImage(getContentResolver(), canvas.getDrawingCache(), UUID.randomUUID().toString()+".png", "drawing");
 
-            File f = new File(directory, "canvas.png");
-            f.createNewFile();
-            FileOutputStream out = new FileOutputStream(f);
-            canvas.canvasBitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+                if(imgSaved != null){
+                    Toast savedToast = Toast.makeText(getApplicationContext(), "Drawing saved to Gallery!", Toast.LENGTH_SHORT);
+                    savedToast.show();
+                }
+                else {
+                    Toast unsavedToast = Toast.makeText(getApplicationContext(), "Oops! Image could not be saved.", Toast.LENGTH_SHORT);
+                    unsavedToast.show();
+                }
+                canvas.destroyDrawingCache();
+            }
+        });
+        saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                dialog.cancel();
+            }
+        });
+        saveDialog.show();
     }
 
     @Override
