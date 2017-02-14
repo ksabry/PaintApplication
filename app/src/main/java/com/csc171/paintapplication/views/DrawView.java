@@ -120,6 +120,7 @@ public class DrawView extends View {
     public void clearHistory() {
         history.clear();
         historyCache.clear();
+        historyCache.add(canvasBitmap.copy(canvasBitmap.getConfig(), true));
         historyIndex = 0;
     }
 
@@ -136,8 +137,7 @@ public class DrawView extends View {
     }
 
     public void redo() {
-        if (historyIndex != history.size())
-        {
+        if (historyIndex != history.size()) {
             applyOperation(history.get(historyIndex++));
             invalidate();
         }

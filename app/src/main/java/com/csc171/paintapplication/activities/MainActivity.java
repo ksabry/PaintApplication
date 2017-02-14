@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         button_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                canvas.clearCanvas();
+                newCanvas();
             }
         });
 
@@ -85,6 +85,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    public void newCanvas() {
+        AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
+        newDialog.setTitle("New Drawing");
+        newDialog.setMessage("This will remove all unsaved work, do you wish to continue?");
+        newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                canvas.clearCanvas();
+                canvas.clearHistory();
+            }
+        });
+        newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int which){
+                dialog.cancel();
+            }
+        });
+        newDialog.show();
     }
 
     public void saveCanvas() {
