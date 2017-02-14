@@ -11,40 +11,69 @@
     android:background="#004433">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout">
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_new"
-            android:id="@+id/button_new" />
+            android:id="@+id/linearLayout">
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_new"
+                android:id="@+id/button_new" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_brush"
+                android:id="@+id/button_brush" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_erase"
+                android:id="@+id/button_erase" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_save"
+                android:id="@+id/button_save" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_undo"
+                android:id="@+id/button_undo" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_redo"
+                android:id="@+id/button_redo" />
+        </LinearLayout>
+
+        <com.csc171.paintapplication.views.DrawView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_brush"
-            android:id="@+id/button_brush" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_erase"
-            android:id="@+id/button_erase" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/button_save"
-            android:id="@+id/button_save" />
+            android:id="@+id/canvas" />
     </LinearLayout>
 
     <com.csc171.paintapplication.views.DrawView
