@@ -4,4 +4,7 @@
     <string name="button_brush">Brush</string>
     <string name="button_erase">Erase</string>
     <string name="button_save">Save</string>
+    <string name="smallB">Small</string>
+    <string name="medB">Medium</string>
+    <string name="largeB">Large</string>
 </resources>
