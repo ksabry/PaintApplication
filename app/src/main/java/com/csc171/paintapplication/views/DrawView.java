@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+
 import com.csc171.paintapplication.models.Operation;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class DrawView extends View {
     private Path drawPath;
     private Paint drawPaint, canvasPaint;
 
-    public int brushColor;
+    public int brushColor = 0xFF660000;
     public float brushWidth;
     public Paint.Style style;
 
@@ -109,7 +110,7 @@ public class DrawView extends View {
         drawPath = new Path();
         drawPaint = new Paint();
 
-        brushColor = Color.parseColor("#ff000000");
+        drawPaint.setColor(brushColor);
         brushWidth = 20;
         style = Paint.Style.STROKE;
 
@@ -141,6 +142,13 @@ public class DrawView extends View {
             applyOperation(history.get(historyIndex++));
             invalidate();
         }
+    }
+
+    public void setColor(String newColor){
+//set color
+        invalidate();
+        brushColor = Color.parseColor(newColor);
+        drawPaint.setColor(brushColor);
     }
 
     @Override

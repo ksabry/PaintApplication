@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.csc171.paintapplication.R;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Button button_save;
     private Button button_undo;
     private Button button_redo;
+    private ImageButton currPaint;
 
     private SensorManager sensorManager;
 
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
+        currPaint = (ImageButton)paintLayout.getChildAt(0);
+        currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
 
         canvas = (DrawView) findViewById(R.id.canvas);
         button_new = (Button) findViewById(R.id.button_new);
@@ -135,6 +141,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+    public void paintClicked(View view){
+        if(view!=currPaint){
+//update color
+            ImageButton imgView = (ImageButton)view;
+            String color = view.getTag().toString();
+            currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+            currPaint=(ImageButton)view;
+            canvas.setColor(color);
+            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+            currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+            currPaint=(ImageButton)view;
+        }
+
     }
 
     private long lastTime = System.currentTimeMillis();
