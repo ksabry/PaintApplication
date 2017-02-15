@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
             currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
             currPaint=(ImageButton)view;
+            currPaint=(ImageButton)view;
         }
 
     }
