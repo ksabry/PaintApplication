@@ -6,18 +6,23 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 
 import com.csc171.paintapplication.models.Operation;
 
+import com.csc171.paintapplication.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrawView extends View {
+public class DrawView extends View{
     public static final String TAG = "DrawView";
 
     private Canvas drawCanvas;
@@ -26,23 +31,29 @@ public class DrawView extends View {
     private Paint drawPaint, canvasPaint;
 
     public int brushColor = 0xFF660000;
-    public float brushWidth;
-    public Paint.Style style;
+    private float brushWidth,lastBrushSize;
+    private Paint.Style style;
 
     List<Operation> history;
     List<Bitmap> historyCache;
     int historyIndex = 0;
     private static final int historyCacheInterval = 10;
 
+    private ScaleGestureDetector scaleDetector;
+    private float scaleFactor = 1.f;
+
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupCanvas();
+        scaleDetector = new ScaleGestureDetector(context, new ScaleListener());
     }
 
     private List<Float> pathPoints;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        scaleDetector.onTouchEvent(event);
+        
         float touchX = event.getX(), touchY = event.getY();
 
         switch (event.getAction()) {
@@ -111,7 +122,8 @@ public class DrawView extends View {
         drawPaint = new Paint();
 
         drawPaint.setColor(brushColor);
-        brushWidth = 20;
+        brushWidth = getResources().getInteger(R.integer.medium_size);
+        lastBrushSize = brushWidth;
         style = Paint.Style.STROKE;
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
@@ -181,6 +193,15 @@ public class DrawView extends View {
         setupPaint();
     }
 
+    public void setErase(boolean b){
+        if(b){
+            drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        }else{
+            drawPaint.setXfermode(null);
+        }
+
+    }
+
     public void setBrushColor(String color) {
         setBrushColor(Color.parseColor(color));
     }
@@ -200,7 +221,21 @@ public class DrawView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        canvas.save();
+        canvas.scale(scaleFactor, scaleFactor);
         canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
         canvas.drawPath(drawPath, drawPaint);
+        canvas.restore();
+    }
+
+    public void setLastBrushWidth(float lastBrushWidth) {
+        lastBrushSize = lastBrushWidth;
+    }
+
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector){
+            return true;
+        }
     }
 }

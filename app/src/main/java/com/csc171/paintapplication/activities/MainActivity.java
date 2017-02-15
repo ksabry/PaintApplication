@@ -1,11 +1,14 @@
 package com.csc171.paintapplication.activities;
 
 import android.content.DialogInterface;
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -18,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.SeekBar;
 
 import com.csc171.paintapplication.R;
 import com.csc171.paintapplication.models.Operation;
@@ -29,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, View.OnClickListener {
     public static final String TAG = "MainActivity";
 
     private DrawView canvas;
@@ -45,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private static final double SHAKE_THRESHOLD = 25.0;
 
+    private float smallBrush, mediumBrush, largeBrush;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +62,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         canvas = (DrawView) findViewById(R.id.canvas);
         button_new = (Button) findViewById(R.id.button_new);
         button_brush = (Button) findViewById(R.id.button_brush);
+        button_brush.setOnClickListener(this);
         button_erase = (Button) findViewById(R.id.button_erase);
+        button_erase.setOnClickListener(this);
         button_save = (Button) findViewById(R.id.button_save);
         button_undo = (Button) findViewById(R.id.button_undo);
         button_redo = (Button) findViewById(R.id.button_redo);
+
+        smallBrush = getResources().getInteger(R.integer.small_size);
+        mediumBrush = getResources().getInteger(R.integer.medium_size);
+        largeBrush = getResources().getInteger(R.integer.large_size);
 
         button_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,5 +185,65 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void onShake(SensorEvent event) {
         canvas.clearCanvas();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.button_brush){
+            final Dialog brushDialog = new Dialog(this);
+            brushDialog.setTitle("Brush Size: " + (int)canvas.getBrushWidth());
+            brushDialog.setContentView(R.layout.brush_layout);
+            SeekBar seek = (SeekBar)brushDialog.findViewById(R.id.sizeSeek);
+            seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if(fromUser){
+                        canvas.setBrushWidth(progress);
+                        brushDialog.setTitle("Brush Size: " + progress);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            seek.setProgress((int) canvas.getBrushWidth());
+            canvas.setErase(false);
+
+            brushDialog.show();
+        }else if(v.getId() == R.id.button_erase){
+            final Dialog brushDialog = new Dialog(this);
+            brushDialog.setTitle("Brush Size: " + (int)canvas.getBrushWidth());
+            brushDialog.setContentView(R.layout.brush_layout);
+            SeekBar seek = (SeekBar)brushDialog.findViewById(R.id.sizeSeek);
+            seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if(fromUser){
+                        canvas.setBrushWidth(progress);
+                        brushDialog.setTitle("Brush Size: " + progress);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            seek.setProgress((int) canvas.getBrushWidth());
+            canvas.setErase(true);
+            brushDialog.show();
+        }
     }
 }
