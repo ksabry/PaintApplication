@@ -10,4 +10,5 @@
     <string name="smallB">Small</string>
     <string name="medB">Medium</string>
     <string name="largeB">Large</string>
+    <string name="button_text">Text</string>
 </resources>

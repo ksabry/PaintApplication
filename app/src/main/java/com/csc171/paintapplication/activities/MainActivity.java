@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -216,7 +217,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             canvas.setErase(false);
 
             brushDialog.show();
-        }else if(v.getId() == R.id.button_erase){
+        }
+        else if(v.getId() == R.id.button_text){
+            final Dialog textInput = new Dialog(this);
+            textInput.setTitle("Enter text: ");
+            textInput.setContentView(R.layout.text_layout);
+            EditText userInput = (EditText) textInput.findViewById(R.id.text_input);
+            textInput.show();
+        }
+        else if(v.getId() == R.id.button_erase){
             final Dialog brushDialog = new Dialog(this);
             brushDialog.setTitle("Brush Size: " + (int)canvas.getBrushWidth());
             brushDialog.setContentView(R.layout.brush_layout);

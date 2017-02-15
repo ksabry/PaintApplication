@@ -128,6 +128,7 @@ public class DrawView extends View{
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
         setupPaint();
+
     }
 
     public void clearHistory() {
@@ -186,6 +187,7 @@ public class DrawView extends View{
         drawPaint.setStyle(style);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
+
     }
 
     public void setBrushColor(int color) {
@@ -196,6 +198,7 @@ public class DrawView extends View{
     public void setErase(boolean b){
         if(b){
             drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
         }else{
             drawPaint.setXfermode(null);
         }
