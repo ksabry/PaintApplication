@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (fromUser) {
                         canvas.setRadius(progress);
-                        brushDialog.setTitle("Circle Radius: " + canvas);
+                        brushDialog.setTitle("Circle Radius: " + progress);
                     }
                 }
 
