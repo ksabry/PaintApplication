@@ -235,6 +235,20 @@ public class DrawView extends View{
         lastBrushSize = lastBrushWidth;
     }
 
+    public void placeText(String s, int xVal, int yVal) {
+
+        drawCanvas.save();
+        drawCanvas.scale(scaleFactor,scaleFactor);
+        drawCanvas.drawBitmap(canvasBitmap, 0,0, canvasPaint);
+        drawPaint.setStyle(Paint.Style.FILL);
+        drawPaint.setStrokeWidth(1);
+        drawPaint.setTextSize(50);
+        drawCanvas.drawText(s,xVal,yVal,drawPaint);
+        drawPaint.setStrokeWidth(lastBrushSize);
+        drawPaint.setStyle(Paint.Style.STROKE);
+        drawCanvas.restore();
+    }
+
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector){

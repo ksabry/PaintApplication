@@ -16,11 +16,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SeekBar;
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Button button_save;
     private Button button_undo;
     private Button button_redo;
+    private Button button_text;
     private ImageButton currPaint;
 
     private SensorManager sensorManager;
@@ -69,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         button_save = (Button) findViewById(R.id.button_save);
         button_undo = (Button) findViewById(R.id.button_undo);
         button_redo = (Button) findViewById(R.id.button_redo);
+        button_text = (Button) findViewById(R.id.button_text);
+        button_text.setOnClickListener(this);
 
         smallBrush = getResources().getInteger(R.integer.small_size);
         mediumBrush = getResources().getInteger(R.integer.medium_size);
@@ -219,10 +225,67 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             brushDialog.show();
         }
         else if(v.getId() == R.id.button_text){
+            final String[] stringToPlace = new String[1];
             final Dialog textInput = new Dialog(this);
             textInput.setTitle("Enter text: ");
             textInput.setContentView(R.layout.text_layout);
-            EditText userInput = (EditText) textInput.findViewById(R.id.text_input);
+            final TextView seekXVal = (TextView) textInput.findViewById(R.id.xValue);
+            final TextView seekYVal = (TextView) textInput.findViewById(R.id.yValue);
+            final SeekBar seekX = (SeekBar) textInput.findViewById(R.id.textX);
+            final SeekBar seekY = (SeekBar) textInput.findViewById(R.id.textY);
+            final EditText userInput = (EditText) textInput.findViewById(R.id.text_input);
+
+            userInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == 6) {
+                        stringToPlace[0] = userInput.getText().toString();
+                        Log.i("hello", stringToPlace[0]);
+                        canvas.placeText(stringToPlace[0], seekX.getProgress(), seekY.getProgress());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            seekX.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if(fromUser){
+                       seekXVal.setText(""+progress);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            seekY.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if(fromUser){
+                        seekYVal.setText(""+progress);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
             textInput.show();
         }
         else if(v.getId() == R.id.button_erase){
