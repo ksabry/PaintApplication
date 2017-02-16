@@ -25,7 +25,6 @@ import java.util.List;
 public class DrawView extends View{
     public static final String TAG = "DrawView";
 
-    Paint myGreenPaintStroke;
 
     private Canvas drawCanvas;
     public Bitmap canvasBitmap;
@@ -142,10 +141,6 @@ public class DrawView extends View{
         canvasPaint = new Paint(Paint.DITHER_FLAG);
         setupPaint();
 
-        myGreenPaintStroke = new Paint();
-        myGreenPaintStroke.setColor(0xff337722); // aarrggbb alpha is first
-        myGreenPaintStroke.setStyle(Paint.Style.STROKE);
-        myGreenPaintStroke.setStrokeWidth(10);
     }
 
     public void clearHistory() {
@@ -204,6 +199,7 @@ public class DrawView extends View{
         drawPaint.setStyle(style);
         drawPaint.setStrokeJoin(Paint.Join.ROUND);
         drawPaint.setStrokeCap(Paint.Cap.ROUND);
+
     }
 
     public void setBrushColor(int color) {
@@ -214,6 +210,7 @@ public class DrawView extends View{
     public void setErase(boolean b){
         if(b){
             drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
         }else{
             drawPaint.setXfermode(null);
         }
@@ -260,6 +257,20 @@ public class DrawView extends View{
 
     public void setLastBrushWidth(float lastBrushWidth) {
         lastBrushSize = lastBrushWidth;
+    }
+
+    public void placeText(String s, int xVal, int yVal) {
+
+        drawCanvas.save();
+        drawCanvas.scale(scaleFactor,scaleFactor);
+        drawCanvas.drawBitmap(canvasBitmap, 0,0, canvasPaint);
+        drawPaint.setStyle(Paint.Style.FILL);
+        drawPaint.setStrokeWidth(1);
+        drawPaint.setTextSize(50);
+        drawCanvas.drawText(s,xVal,yVal,drawPaint);
+        drawPaint.setStrokeWidth(lastBrushSize);
+        drawPaint.setStyle(Paint.Style.STROKE);
+        drawCanvas.restore();
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
