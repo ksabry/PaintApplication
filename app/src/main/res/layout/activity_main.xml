@@ -52,6 +52,13 @@
                 android:text="@string/button_save"
                 android:id="@+id/button_save" />
 
+            <Button
+                android:text="Circle Stamp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_circle_stamp"
+                android:layout_weight="1" />
+
         </LinearLayout>
 
         <LinearLayout

@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Button button_save;
     private Button button_undo;
     private Button button_redo;
+    private Button button_circle_stamp;
     private ImageButton currPaint;
 
     private SensorManager sensorManager;
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         button_save = (Button) findViewById(R.id.button_save);
         button_undo = (Button) findViewById(R.id.button_undo);
         button_redo = (Button) findViewById(R.id.button_redo);
+        button_circle_stamp = (Button) findViewById(R.id.button_circle_stamp);
+        button_circle_stamp.setOnClickListener(this);
+
 
         smallBrush = getResources().getInteger(R.integer.small_size);
         mediumBrush = getResources().getInteger(R.integer.medium_size);
@@ -100,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 canvas.redo();
             }
         });
+
+
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
@@ -215,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             });
             seek.setProgress((int) canvas.getBrushWidth());
             canvas.setErase(false);
-
+            canvas.setCircStamp(false);
             brushDialog.show();
         }else if(v.getId() == R.id.button_erase){
             final Dialog brushDialog = new Dialog(this);
@@ -243,6 +249,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             });
             seek.setProgress((int) canvas.getBrushWidth());
             canvas.setErase(true);
+            canvas.setCircStamp(false);
+            brushDialog.show();
+        }else if(v.getId() == R.id.button_circle_stamp){
+            final Dialog brushDialog = new Dialog(this);
+            brushDialog.setContentView(R.layout.brush_layout);
+            brushDialog.setTitle("Circle Radius: " + (int)canvas.getRadius());
+            SeekBar seek = (SeekBar)brushDialog.findViewById(R.id.sizeSeek);
+            seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (fromUser) {
+                        canvas.setRadius(progress);
+                        brushDialog.setTitle("Circle Radius: " + canvas);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            seek.setProgress((int) canvas.getBrushWidth());
+            canvas.setErase(false);
+            canvas.setCircStamp(true);
             brushDialog.show();
         }
     }

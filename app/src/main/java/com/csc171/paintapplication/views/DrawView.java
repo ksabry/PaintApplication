@@ -25,10 +25,14 @@ import java.util.List;
 public class DrawView extends View{
     public static final String TAG = "DrawView";
 
+    Paint myGreenPaintStroke;
+
     private Canvas drawCanvas;
     public Bitmap canvasBitmap;
     private Path drawPath;
     private Paint drawPaint, canvasPaint;
+    private int radius = 40;
+    private boolean isCircleStamp = false;
 
     public int brushColor = 0xFF660000;
     private float brushWidth,lastBrushSize;
@@ -58,9 +62,15 @@ public class DrawView extends View{
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                pathPoints = new ArrayList<>();
-                drawPath.moveTo(touchX, touchY);
-                pathPoints.add(touchX); pathPoints.add(touchY);
+                if(!isCircleStamp) {
+                    pathPoints = new ArrayList<>();
+                    drawPath.moveTo(touchX, touchY);
+                    pathPoints.add(touchX);
+                    pathPoints.add(touchY);
+                }else {
+                    drawCanvas.drawCircle(touchX, touchY, radius, drawPaint);
+                }
+
                 break;
             case MotionEvent.ACTION_UP:
                 drawCanvas.drawPath(drawPath, drawPaint);
@@ -68,8 +78,11 @@ public class DrawView extends View{
                 addToHistory();
                 break;
             case MotionEvent.ACTION_MOVE:
-                pathPoints.add(touchX); pathPoints.add(touchY);
-                drawPath.lineTo(touchX, touchY);
+                if(!isCircleStamp) {
+                    pathPoints.add(touchX);
+                    pathPoints.add(touchY);
+                    drawPath.lineTo(touchX, touchY);
+                }
                 //int size = pathPoints.size();
                 //drawPath.cubicTo(pathPoints.get(size - 6), pathPoints.get(size - 5), pathPoints.get(size - 4), pathPoints.get(size - 3), pathPoints.get(size - 2), pathPoints.get(size - 1));
                 break;
@@ -128,6 +141,11 @@ public class DrawView extends View{
 
         canvasPaint = new Paint(Paint.DITHER_FLAG);
         setupPaint();
+
+        myGreenPaintStroke = new Paint();
+        myGreenPaintStroke.setColor(0xff337722); // aarrggbb alpha is first
+        myGreenPaintStroke.setStyle(Paint.Style.STROKE);
+        myGreenPaintStroke.setStrokeWidth(10);
     }
 
     public void clearHistory() {
@@ -213,6 +231,18 @@ public class DrawView extends View{
     public void setBrushWidth(float width) {
         brushWidth = width;
         setupPaint();
+    }
+
+    public int getRadius (){
+        return this.radius;
+    }
+
+    public void setRadius(int radius){
+        this.radius = radius;
+    }
+
+    public void setCircStamp(boolean isSelected){
+        isCircleStamp = isSelected;
     }
 
     public float getBrushWidth() {
